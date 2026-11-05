@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Merci — commande confirmée</title><meta name="robots" content="noindex">
+<style>
+body{margin:0;background:#f3f6f9;color:#10151c;font:17px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:620px;margin:0 auto;padding:64px 16px}h1{font-size:2rem;margin:0 0 .4em;letter-spacing:-.02em}
+.card{background:#fff;border:1px solid #dde3ea;border-radius:14px;padding:22px;margin-top:22px}a{color:#0b63c7}
+</style>
+</head>
+<body>
+<main>
+<h1>Commande confirmée. Votre Pépé Givré part sous 1 à 3 jours ouvrés.</h1>
+<p>Un reçu vient de vous être envoyé par e-mail. Le numéro de suivi suivra dès l'expédition (1 à 3 jours ouvrés).</p>
+<div class="card">
+<strong>Et ensuite ?</strong>
+<ol>
+<li>Livraison en 8 à 12 jours ouvrés (France, Belgique, Suisse).</li>
+<li>À réception : filmez la tête de vos potes et taguez-nous, on repartage les meilleures.</li>
+<li>Un souci : <a href="mailto:contact@growdn.com">contact@growdn.com</a>, réponse sous 24 h ouvrées. Garantie 30 jours.</li>
+</ol>
+</div>
+<p style="margin-top:28px;font-size:.9rem;color:#46505b"><a href="./">Retour à la boutique</a> · <a href="legal.html">Informations légales</a></p>
+</main>
+<script>
+const META_PIXEL_ID = "2629895450792799"; // même ID que index.html
+const PRIX = { solo:24.90, duo:39.90, trio:54.90 };
+// Offre : d'abord ?offre= dans l'URL de redirection Whop (un lien par prix), sinon la valeur mémorisée au clic. Déduplication 10 minutes.
+let consent=null, offre="solo", last=0, clicked=0;
+const q=new URLSearchParams(location.search).get("offre");
+try{ consent=localStorage.getItem("ck"); offre=PRIX[q]?q:(localStorage.getItem("offre")||"solo"); last=+localStorage.getItem("p_ts")||0; clicked=+localStorage.getItem("co_ts")||0; }catch(e){ if(PRIX[q]) offre=q; }
+const fresh = Date.now()-last > 10*60*1000;
+// Purchase seulement si un clic « Commander » a eu lieu dans l'heure (visite directe de merci.html = pas d'achat).
+const legit = !!q || (Date.now()-clicked < 60*60*1000);
+if(META_PIXEL_ID && consent==="1"){
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq("init",META_PIXEL_ID); fbq("track","PageView");
+  if(fresh && legit){
+    fbq("track","Purchase",{value:PRIX[offre]||PRIX.solo,currency:"EUR",content_name:"Pépé Givré "+offre,num_items:{solo:1,duo:2,trio:3}[offre]||1});
+    try{ localStorage.setItem("p_ts",String(Date.now())) }catch(e){}
+  }
+}
+</script>
+</body>
+</html>
